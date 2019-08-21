@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_hero/screens/select_screen.dart';
-
+import 'package:flutter/cupertino.dart';
 import 'card_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,44 +11,42 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-  final List<Widget> _children = [CardScreen(), SelectScreen()];
-
   @override
   void initState() {
     super.initState();
   }
 
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
-          type: BottomNavigationBarType.shifting,
-          items: [
-            BottomNavigationBarItem(
-                backgroundColor: Colors.blueAccent,
-                icon: Icon(
-                  Icons.text_fields,
-                ),
-                title: Text('Chef Card')),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.lightBlue,
-                icon: Icon(
-                  Icons.settings,
-                ),
-                title: Text('Select Allergies')),
-          ]),
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+            backgroundColor: Colors.blueAccent,
+            icon: Icon(
+              Icons.text_fields,
+            ),
+            title: Text('Chef Card')),
+        BottomNavigationBarItem(
+            backgroundColor: Colors.lightBlue,
+            icon: Icon(
+              Icons.settings,
+            ),
+            title: Text('Select Allergies')),
+      ]),
+      tabBuilder: (BuildContext context, int index) {
+        assert(index >= 0 && index <= 1);
+        switch (index) {
+          case 0:
+            return CupertinoTabView(
+                builder: (BuildContext context) => CardScreen());
+            break;
+          case 1:
+            return CupertinoTabView(
+                builder: (BuildContext context) => SelectScreen());
+            break;
+        }
+        return null;
+      },
     );
   }
 }
